@@ -20,8 +20,8 @@ public class TomcatApplication implements ApplicationRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TomcatApplication.class);
 
-	@CoherenceCache("myCacheName")
-	private NamedCache<Long, String> namedCache;
+	@CoherenceCache
+	private NamedCache<String, String> myCacheName;
 
 	@Autowired
 	private Coherence coherence;
@@ -35,7 +35,7 @@ public class TomcatApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		namedCache.put(1L, "Hello World");
+
 		LOGGER.info("context: '{}'", this.context.getContextPath());
 
 		final String cacheNameToUse;
@@ -46,6 +46,8 @@ public class TomcatApplication implements ApplicationRunner {
 		else {
 			cacheNameToUse = "root";
 		}
+
+		this.myCacheName.put(cacheNameToUse, "Hello " + cacheNameToUse);
 
 		NamedCache<Integer, String> namedCache = coherence.getSession().getCache(cacheNameToUse);
 
